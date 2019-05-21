@@ -13,7 +13,8 @@ class fallingOb:
 		self.y+=10
 		if self.y >=600:
 			self.y=0
-			self.x=random.randint(10,170)*5
+			self.x=round(random.randint(10,850)/10.0)*10.0
+			print self.x
 		pygame.draw.rect(self.screen,self.color,(self.x,self.y,self.width,self.height))
 class Character:
 	def __init__(self,screen,color,x,y,width,height):
@@ -47,7 +48,7 @@ width_nhanvat,Height_nhanvat=50,30
 xnhanvat=900/2-width_nhanvat/2
 ynhanvat=600-Height_nhanvat
 for i in range(1):
-	x=random.randint(10,170)*5
+	x=round(random.randint(10,600)/10.0)*10.0
 	y=-1*random.randint(300,1000)
 	Bia=fallingOb(screen,black,x,y,width,height)
 	Object.append(Bia)
