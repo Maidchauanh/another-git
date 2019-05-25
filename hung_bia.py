@@ -28,16 +28,21 @@ pygame.mixer.init() # mixer de choi nhac
 screen = pygame.display.set_mode((X,Y ))
 pygame.display.set_caption("My Game")
 clock = pygame.time.Clock()
-
+ # create the sprite groups
 Nhan_vat= pygame.sprite.Group()
 Kethu=pygame.sprite.Group()	
+
+#create list for asign sprite
+background=["BackGround.png","chungtakhongthuocvenhau.png"]
+anhgaixinh=["anhgaixinh1.png","anhgaixinh3.jpg"]
+
+
+
 #loading the image
 
-background=pygame.image.load (path.join(PNG_dir,"SpacegameBackground.png")).convert()
-player_img=pygame.image.load (path.join(PNG_dir,"ketbia.png")).convert()
-ChaiBia=pygame.image.load (path.join(PNG_dir,"ChaiBia.png")).convert()
-player_img.set_colorkey(WHITE)
-ChaiBia.set_colorkey(WHITE)
+background=pygame.image.load (path.join(PNG_dir,background[0])).convert()
+player_img=pygame.image.load (path.join(PNG_dir,"playerShip1_blue.png")).convert()
+ChaiBia=pygame.image.load (path.join(PNG_dir,"ufoBlue.png")).convert()
 player_rect=player_img.get_rect()
 background_rect=background.get_rect()
 
@@ -49,7 +54,9 @@ def keyPressed(inputKey):
     else:
         return False
 
-
+def LoadAnh(duongdanthumuc,List_anh, thutucuaanh):
+	Anh=pygame.image.load(path.join(duongdanthumuc,List_anh[thutucuaanh])).convert()
+	return Anh
 class Player(pygame.sprite.Sprite):
 	def __init__(self,X,Y,width,height):
 		pygame.sprite.Sprite.__init__(self)
@@ -83,6 +90,7 @@ class Enemy(pygame.sprite.Sprite):
 
 		#self.image=pygame.transform.scale(ChaiBia,(20,60))
 		self.image=pygame.transform.scale(ChaiBia,(self.width,self.height))
+		self.image.set_colorkey(BLACK)
 		#self.image.fill(self.color)
 		self.rect=self.image.get_rect()	
 		self.radius=20
@@ -98,27 +106,33 @@ class Enemy(pygame.sprite.Sprite):
 			self.rect.y=-self.height
 			self.time=0
 			self.rect.x=randint(1,self.X/10-(30+40/10))*10
-
+diem =0 
 class HinhGai(pygame.sprite.Sprite):
 	def __init__(self,X,Y):
 		pygame.sprite.Sprite.__init__(self)
+		self.thutu=0
+		anh=LoadAnh(PNG_dir,anhgaixinh,self.thutu)
+		self.image=pygame.transform.scale(anh,(300,600))
 		self.X=X
 		self.Y=Y
-		#self.image=pygame.transform.scale(ChaiBia,(20,60))
-		self.image=pygame.Surface((300,self.Y))
-		self.image.fill(RED)
 		self.rect=self.image.get_rect()	
 		self.rect.x= self.X-300
+	def update(self):
+		if diem %10==0 and diem !=0:
+			self.thutu+=1
+			anh=LoadAnh(PNG_dir,anhgaixinh,self.thutu)
+			self.image=pygame.transform.scale(anh,(300,600))
+			if self.thutu >= len(anhgaixinh)-1:
+				self.thutu=0
+
 running = True
 ThungBia=Player(X,Y,int(112*1.2),int(50*1.2))
-gaixinh=HinhGai(X,Y,)
-
+gaixinh=HinhGai(X,Y)
 # Nhap enemy
 for i in range(1):
 	Bia=Enemy(X,Y,25,35)
 	Kethu.add(Bia)
 Nhan_vat.add(ThungBia,gaixinh)
-diem =0 
 
 
 #Game loop
@@ -152,6 +166,6 @@ while running:
     # Draw / render
 	Kethu.draw(screen)
 	Nhan_vat.draw(screen)
-    # *after* drawing everything, flip the display
+	    # *after* drawing everything, flip the display
 	pygame.display.update()
 pygame.quit()
